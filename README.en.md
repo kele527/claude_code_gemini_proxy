@@ -19,6 +19,7 @@ This server acts as a bridge, enabling you to use **Claude Code** with Google's 
 ## Recent Improvements (v2.5.0)
 
 ### 🛡️ Enhanced Error Resilience
+
 - **Malformed Chunk Recovery**: Automatically detects and handles malformed JSON chunks from Gemini streaming
 - **Smart Retry Logic**: Exponential backoff with configurable retry limits for streaming errors
 - **Graceful Fallback**: Seamlessly switches to non-streaming mode when streaming fails
@@ -26,6 +27,7 @@ This server acts as a bridge, enabling you to use **Claude Code** with Google's 
 - **Connection Stability**: Handles Gemini 500 Internal Server Errors with automatic retry
 
 ### 📊 Improved Monitoring
+
 - **Detailed Error Classification**: Specific guidance for different types of Gemini API errors
 - **Enhanced Logging**: Comprehensive error tracking with malformed chunk statistics
 - **Real-time Status**: Better health checks and connection testing
@@ -39,28 +41,34 @@ This server acts as a bridge, enabling you to use **Claude Code** with Google's 
 ## Setup
 
 1.  **Clone the repository**:
+
     ```bash
     git clone https://github.com/coffeegrind123/gemini-code.git # Or your fork
     cd gemini-code
     ```
 
 2.  **Create and activate a virtual environment** (recommended):
+
     ```bash
     python3 -m venv .venv
     source .venv/bin/activate
     ```
 
 3.  **Install dependencies**:
+
     ```bash
     pip install -r requirements.txt
     ```
 
 4.  **Configure Environment Variables**:
     Copy the example environment file:
+
     ```bash
     cp .env.example .env
     ```
+
     Edit `.env` and add your Gemini API key. You can also customize model mappings and server settings:
+
     ```dotenv
     # Required: Your Google AI Studio API key
     GEMINI_API_KEY="your-google-ai-studio-key"
@@ -68,18 +76,21 @@ This server acts as a bridge, enabling you to use **Claude Code** with Google's 
     # Optional: Model mappings for Claude Code aliases
     BIG_MODEL="gemini-1.5-pro-latest"    # For 'sonnet' or 'opus' requests
     SMALL_MODEL="gemini-1.5-flash-latest" # For 'haiku' requests
-    
+
+    # Optional: Custom Google API base URL (if you want to use a different endpoint)
+    GEMINI_API_BASE="https://generativelanguage.googleapis.com"
+
     # Optional: Server settings
     HOST="0.0.0.0"
     PORT="8082"
     LOG_LEVEL="WARNING"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
-    
+
     # Optional: Performance and reliability settings
     MAX_TOKENS_LIMIT="8192"           # Max tokens for Gemini responses
     REQUEST_TIMEOUT="90"              # Request timeout in seconds
     MAX_RETRIES="2"                   # LiteLLM retries to Gemini
     MAX_STREAMING_RETRIES="12"         # Streaming-specific retry attempts
-    
+
     # Optional: Streaming control (use if experiencing issues)
     FORCE_DISABLE_STREAMING="false"     # Disable streaming globally
     EMERGENCY_DISABLE_STREAMING="false" # Emergency streaming disable
@@ -105,12 +116,15 @@ This server acts as a bridge, enabling you to use **Claude Code** with Google's 
 
 2.  **Configure Claude Code to Use the Proxy**:
     Set the `ANTHROPIC_BASE_URL` environment variable when running Claude Code:
+
     ```bash
     ANTHROPIC_BASE_URL=http://localhost:8082 claude
     ```
+
     Replace `localhost:8082` if your proxy is running on a different host or port.
 
 3.  **Utilize `CLAUDE.md` for Optimal Gemini Performance (Crucial)**:
+
     - This repository includes a `CLAUDE.md` file. This file contains specific instructions and best practices tailored to help **Gemini** effectively understand and respond to **Claude Code's** unique command structure, tool usage patterns, and desired output formats.
     - **Copy `CLAUDE.md` into your project directory**:
       ```bash
@@ -121,7 +135,7 @@ This server acts as a bridge, enabling you to use **Claude Code** with Google's 
       First read and process CLAUDE.md with intent. After understanding and agreeing to use the policies and practices outlined in the document, respond with YES
       ```
     - This ensures Gemini receives important context and instructions for better assistance.
-  
+
     - If Gemini still fucks up, ask it to read CLAUDE.md again. This might or might not help!
 
 ## How It Works: Powering Claude Code with Gemini
@@ -129,15 +143,15 @@ This server acts as a bridge, enabling you to use **Claude Code** with Google's 
 1.  **Claude Code Request**: You issue a command or prompt in the Claude Code CLI.
 2.  **Anthropic Format**: Claude Code sends an API request (in Anthropic's Messages API format) to the proxy server's address (`http://localhost:8082`).
 3.  **Proxy Translation (Anthropic to Gemini)**: The proxy server:
-    *   Receives the Anthropic-formatted request.
-    *   Validates it and maps any Claude model aliases (like `claude-3-sonnet...`) to the corresponding Gemini model specified in your `.env` (e.g., `gemini-1.5-pro-latest`).
-    *   Translates the message structure, content blocks, and tool definitions into a format LiteLLM can use with the Gemini API.
+    - Receives the Anthropic-formatted request.
+    - Validates it and maps any Claude model aliases (like `claude-3-sonnet...`) to the corresponding Gemini model specified in your `.env` (e.g., `gemini-1.5-pro-latest`).
+    - Translates the message structure, content blocks, and tool definitions into a format LiteLLM can use with the Gemini API.
 4.  **LiteLLM to Gemini**: LiteLLM sends the prepared request to the target Gemini model using your `GEMINI_API_KEY`.
 5.  **Gemini Response**: Gemini processes the request and sends its response back through LiteLLM.
 6.  **Proxy Translation (Gemini to Anthropic)**: The proxy server:
-    *   Receives the Gemini response from LiteLLM (this can be a stream of events or a complete JSON object).
-    *   Handles streaming errors and malformed chunks with intelligent recovery.
-    *   Converts Gemini's output (text, tool calls, stop reasons) back into the Anthropic Messages API format that Claude Code expects.
+    - Receives the Gemini response from LiteLLM (this can be a stream of events or a complete JSON object).
+    - Handles streaming errors and malformed chunks with intelligent recovery.
+    - Converts Gemini's output (text, tool calls, stop reasons) back into the Anthropic Messages API format that Claude Code expects.
 7.  **Response to Claude Code**: The proxy sends the Anthropic-formatted response back to your Claude Code client, which then displays the result or performs the requested action.
 
 ## Model Mapping for Claude Code
@@ -163,27 +177,32 @@ The server maintains a list of known Gemini models. If a recognized Gemini model
 ### Common Issues and Solutions
 
 **Streaming Errors (malformed chunks):**
+
 - The proxy automatically handles malformed JSON chunks from Gemini
 - If streaming becomes unstable, set `FORCE_DISABLE_STREAMING=true` as a temporary fix
 - Increase `MAX_STREAMING_RETRIES` for more resilient streaming
 
 **Gemini 500 Internal Server Errors:**
+
 - The proxy automatically retries with exponential backoff
 - These are temporary Gemini API issues that resolve automatically
 - Check `/health` endpoint to monitor API status
 
 **Connection Timeouts:**
+
 - Increase `REQUEST_TIMEOUT` if experiencing frequent timeouts
 - Check your internet connection and firewall settings
 - Use `/test-connection` endpoint to verify API connectivity
 
 **Rate Limiting:**
+
 - Monitor your Google AI Studio quota in the Google Cloud Console
 - The proxy will provide specific rate limit guidance in error messages
 
 ### Emergency Mode
 
 If you experience persistent issues:
+
 ```bash
 # Disable streaming temporarily
 export EMERGENCY_DISABLE_STREAMING=true
@@ -231,6 +250,7 @@ When you run `claude` in a project directory, the Claude Code CLI automatically 
 Contributions, issues, and feature requests are welcome! Please submit them on the GitHub repository.
 
 Areas where contributions are especially valuable:
+
 - Additional Gemini model support
 - Performance optimizations
 - Enhanced error recovery strategies
