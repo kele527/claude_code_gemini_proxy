@@ -19,6 +19,7 @@
 - **完整的工具使用支持**: 在 Claude Code 和 Gemini 之间双向转换工具使用（函数调用）的格式。
 - **高级错误处理**: 为常见的 Gemini API 问题提供具体、可操作的错误信息和自动回退策略。
 - **诊断端点**: 包含 `/health` 和 `/test-connection`，方便快速排查问题。
+- **代理支持**: 支持代理，可以设置 `HTTPS_PROXY` 环境变量。
 
 ## 环境准备
 
@@ -107,4 +108,4 @@
 
 ## 致谢
 
-该项目深受 [claude-code-proxy by @1rgs](https://github.com/1rgs/claude-code-proxy) 的启发，并建立在其开创性的工作之上。
+该项目深受 [gemini-code @coffeegrind123](https://github.com/coffeegrind123/gemini-code) 的启发，并建立在其开创性的工作之上。

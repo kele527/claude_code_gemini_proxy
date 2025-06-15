@@ -26,6 +26,12 @@ This server acts as a bridge, enabling you to use **Claude Code** with Google's 
 - **Buffer Management**: Intelligent chunk buffering and reconstruction for incomplete JSON
 - **Connection Stability**: Handles Gemini 500 Internal Server Errors with automatic retry
 
+### 🌐 Proxy Support
+
+- **HTTPS Proxy**: Supports HTTP/HTTPS proxies via `HTTPS_PROXY` environment variable.
+- **Dynamic Timeouts**: Automatically adjusts request timeout based on the complexity of the request.
+- **Retries**: Automatically retries failed requests with exponential backoff.
+
 ### 📊 Improved Monitoring
 
 - **Detailed Error Classification**: Specific guidance for different types of Gemini API errors
