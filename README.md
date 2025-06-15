@@ -1,8 +1,8 @@
-# Claude-Gemini-Bridge: Anthropic 与 Gemini API 的无缝桥接代理
+# Gemini for Claude Code: An Anthropic-Compatible Proxy
 
 [English Readme](./README.en.md)
 
-这是一个高性能代理服务器，旨在无缝桥接 Anthropic Messages API 与 Google Gemini API。它能够实时地将来自客户端（如 Claude Code）的 Anthropic API 格式请求，智能转换为 Gemini 模型所需的格式，并将 Gemini 的响应再转换回 Anthropic 格式。
+这是一个 Claude Code 的代理服务器，旨在无缝桥接 Anthropic Messages API 与 Google Gemini API。它能够实时地将来自客户端（如 Claude Code）的 Anthropic API 格式请求，智能转换为 Gemini 模型所需的格式，并将 Gemini 的响应再转换回 Anthropic 格式。
 
 ![Claude Code with Gemini Proxy](image.png)
 
@@ -29,28 +29,34 @@
 ## 安装与配置
 
 1.  **克隆仓库**:
+
     ```bash
     git clone https://github.com/kele527/claude-gemini-bridge.git # 或者你的 fork
     cd claude-gemini-bridge
     ```
 
 2.  **创建并激活虚拟环境** (推荐):
+
     ```bash
     python3 -m venv .venv
     source .venv/bin/activate
     ```
 
 3.  **安装依赖**:
+
     ```bash
     pip install -r requirements.txt
     ```
 
 4.  **配置环境变量**:
     复制环境变量示例文件：
+
     ```bash
     cp .env.example .env
     ```
+
     编辑 `.env` 文件，填入您的 Gemini API 密钥，并可按需自定义模型映射和服务器设置：
+
     ```dotenv
     # 必需: 你的 Google AI Studio API 密钥
     GEMINI_API_KEY="your-google-ai-studio-key"
@@ -79,6 +85,7 @@
 
 2.  **配置 Claude Code 使用代理**:
     在运行 Claude Code 时，设置 `ANTHROPIC_BASE_URL` 环境变量：
+
     ```bash
     ANTHROPIC_BASE_URL=http://localhost:8082 claude
     ```
