@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -F)",
+      "Bash(git remote add origin git@github.com:kele527/claude_code_gemini_proxy.git)",
+      "Bash(git push -u origin main)",
+      "Bash(git remote set-url origin git@github.com:kele527/claude_code_gemini_proxy.git)",
+      "Bash(mv README.md README.en.md)",
+      "Bash(git add README.md README.en.md)",
+      "Bash(git commit -m \"docs: Add Chinese README and rename original to README.en.md\")",
+      "Bash(git push)",
+      "Bash(ls -l README*)",
+      "Bash(git add README.md)",
+      "Bash(git commit -m \"docs: Create Chinese README\")"
+    ],
+    "deny": []
+  }
+}
